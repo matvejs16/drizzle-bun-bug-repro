@@ -30,6 +30,13 @@ When executing `await db.select({ value: count() }).from(users)`, the process te
    docker compose run --rm seeder
    ```
 
+## Clean Reset (Recommended)
+If you want to ensure a completely fresh state between runs (e.g., to verify if patches are applied or to clear the database), use the following command to stop containers, remove volumes, and delete the local image:
+```bash
+docker compose down -v --rmi local
+```
+Then run the reproduction command again.
+
 ## Expected vs Actual Output
 - **Expected:** The script should print "Query finished successfully" and show the user count.
 - **Actual:** The script prints "Querying... user count..." and the process exits silently with code 0.
