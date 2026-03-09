@@ -10,9 +10,24 @@ async function checkPatches() {
   
   if (fs.existsSync(sessionPath)) {
     const content = fs.readFileSync(sessionPath, 'utf8');
-    const isPatched = content.includes('return await client.unsafe');
+    
+    // Check for the specific patched line in BunSQLPreparedQuery.execute
+    // Original: return client.unsafe(query, params).values();
+    // Patched: return await client.unsafe(query, params).values();
+    const patchedLine = 'return await client.unsafe(query, params).values();';
+    const isPatched = content.includes(patchedLine);
+    
     console.log(`[DIAGNOSTIC] File: ${sessionPath}`);
-    console.log(`[DIAGNOSTIC] Patch applied: ${isPatched ? '✅ YES' : '❌ NO'}`);
+    console.log(`[DIAGNOSTIC] Patch "await client.unsafe(...).values()" applied: ${isPatched ? '✅ YES' : '❌ NO'}`);
+    
+    if (!isPatched) {
+      // Find what's actually there to debug
+      const lines = content.split('\n');
+      const nearLine = lines.find(l => l.includes('client.unsafe') && l.includes('.values()'));
+      if (nearLine) {
+        console.log(`[DIAGNOSTIC] Actual line found: "${nearLine.trim()}"`);
+      }
+    }
   } else {
     console.log(`[DIAGNOSTIC] File not found: ${sessionPath}`);
   }
