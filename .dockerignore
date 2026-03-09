@@ -1,0 +1,8 @@
+node_modules
+.git
+.turbo
+dist
+.nuxt
+.output
+.DS_Store
+*.log

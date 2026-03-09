@@ -1,0 +1,21 @@
+{
+  "name": "drizzle-bun-repro-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "db:push": "bun run --cwd packages/pg-database db:push",
+    "seed-dev": "bun run db:push && bun run --cwd packages/pg-database seed-dev"
+  },
+  "dependencies": {
+    "drizzle-orm": "^1.0.0-beta.16-ea816b6",
+    "pg": "^8.20.0",
+    "decimal.js": "^10.4.3"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^1.0.0-beta.16-ea816b6",
+    "typescript": "^5.9.3",
+    "@types/bun": "^1.3.10"
+  }
+}

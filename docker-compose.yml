@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: repro_user
+      POSTGRES_PASSWORD: repro_password
+      POSTGRES_DB: repro_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U repro_user -d repro_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  seeder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    working_dir: /app
+    environment:
+      DB_URL: postgres://repro_user:repro_password@db:5432/repro_db
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    command: bun run seed-dev

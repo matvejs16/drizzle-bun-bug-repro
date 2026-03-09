@@ -1,0 +1,9 @@
+{
+  "name": "@repo/pg-database",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "db:push": "drizzle-kit push --config drizzle.config.ts",
+    "seed-dev": "bun run ./scripts/seeding/index.ts"
+  }
+}
