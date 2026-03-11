@@ -56,6 +56,15 @@ function patchPgCoreSession(filePath) {
         console.log(`[PATCHER] Applied Pg-Core 'invalidate' patch to: ${filePath}`);
     }
 
+    // Sub-patch C: 'const cacheStrat = this.cache !== void 0 ||'
+    const searchCacheStrat = 'const cacheStrat = this.cache !== void 0 || ';
+    const replaceCacheStrat = 'const cacheStrat = this.cache !== void 0 && !';
+    if (code.includes(searchCacheStrat)) {
+        code = code.replace(searchCacheStrat, replaceCacheStrat);
+        modified = true;
+        console.log(`[PATCHER] Applied Pg-Core cacheStrat condition patch to: ${filePath}`);
+    }
+
     if (modified) {
         const originalCodeFilePath = path.join(path.dirname(filePath), `${path.basename(filePath, path.extname(filePath))}.orig${path.extname(filePath)}`);
         if (!fs.existsSync(originalCodeFilePath)) {
